@@ -1,16 +1,19 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { fetchWeather } from '../actions';
 
-export default class SearchBar extends Component {
+export class SearchBar extends Component {
 
     constructor(props){
         super(props);
 
         this.state = {term: ''};
-        this.onInputChange = this.onInputChange.bind(this)
+        this.onInputChange = this.onInputChange.bind(this);
+        this.onFormSubmit = this.onFormSubmit.bind(this);
     }
 
     onInputChange(event){
-        console.log(event.target.value);
         this.setState({term: event.target.value})
     }
 
@@ -20,6 +23,9 @@ export default class SearchBar extends Component {
         // But it is not what we want. Beacause we didn't make a function for submit button or enter btn.
         // So we need to prevent Default Event 
         event.preventDefault();
+        this.props.fetchWeather(this.state.term);
+        this.setState({ term : '' })
+
     }
 
     render(){
@@ -39,3 +45,9 @@ export default class SearchBar extends Component {
         )
     }
 }
+
+function mapDispatchToProps(dispatch){
+    return bindActionCreators({ fetchWeather }, dispatch);
+}
+
+export default connect(null, mapDispatchToProps)(SearchBar);
